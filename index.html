@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>TheChatt</title>
+</head>
+
+<body>
+
+        <div id="settings-module">
+            <div id="settings-box">
+                <div id="settings-close">
+                    <span class="material-icons" id="close">
+                        close
+                    </span>
+                </div>
+                <div id="logout">
+                    <button id="logout-btn">Logout</button>
+                </div>
+            </div>
+        </div>
+
+    <div id="main">
+        <div id="topbar">
+            <h2>TheChatt</h2>
+        </div>
+
+
+
+        <div id="sidebar">
+            <div id="groups">
+                <div id="public-groups">
+                    
+                </div>
+                <div id="newgroup">
+                    <form id="creategroup">
+                        <button style="height: 50px; background-color: rgb(37, 37, 37); border: none;">
+                        <span class="material-icons" id="addicon">
+                            add
+                        </span>
+                        </button> 
+                    </form>
+                </div>
+            </div>
+            <div id="dirrectmessages">
+                <div id="dirrectmessagestext">
+                    <h3 class="directmessage">DirrectMeddelande</h3>
+                </div>
+                <div id="people">
+
+                </div>
+                <div id="profile">
+                    <div id="profilename">
+                        <h6>You'r name</h6>
+                    </div>
+                    <div id="settings">
+                        <span class="material-icons" id="settingicon">
+                            settings
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="messagesareamodule">
+            <div id="messagesarea">
+                <ul id="messages">
+                    
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div id="login-module">
+        <div id="login-content">
+            <div id="welcome">
+                <h5>Välkommen tillbacka!</h5>
+            </div>
+            <form id="login">
+                <h4>E-post</h4>
+                <input type="email" id="email" placeholder="Email:" required>
+                <h4>Password</h4>
+                <input type="password" id="password" placeholder="Password:" required>
+                <div id="enter">
+                    <button id="logginbtn" type="submit">Logga in</button>
+                </div>
+                <h4>Behöver ett konto <a href="" id="go-register">Regristrera</a>
+                </h4>
+            </form>
+        </div>
+    </div>
+
+    <div id="register-module">
+        <form id="register-content">
+            <h3>Email</h3>
+            <input type="email" id="reg-email" placeholder="Email:" required>
+            <h3>Lösenord</h3>
+            <input type="password" id="reg-password" placeholder="Lösenord" required>
+            <h3>Lösenord igen</h3>
+            <input type="password" id="reg-password-confirm" placeholder="Lösenord igen" required>
+            <div>
+                <button id="register" type="submit">Regristrera</button>
+            </div>
+        </form>
+    </div>
+
+    <script type="module" src="app.js"></script>
+    <script src="https://code.iconify.design/2/2.1.0/iconify.min.js"></script>
+</body>
+
+</html>
