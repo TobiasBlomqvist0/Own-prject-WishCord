@@ -1,7 +1,7 @@
 //all of my imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.5.0/firebase-app.js"
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.5.0/firebase-auth.js"
-import { getFirestore, query, collection, onSnapshot, orderBy, addDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/9.5.0/firebase-firestore.js'
+import { getFirestore, query, collection, onSnapshot, orderBy,doc, addDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/9.5.0/firebase-firestore.js'
 
 //conected to my firebase app
 const firebaseConfig = initializeApp({
@@ -18,6 +18,7 @@ const auth = getAuth(firebaseConfig)
 const mainModule = document.getElementById("main")
 const logginModule = document.getElementById("login-module")
 const registerModule = document.getElementById("register-module")
+const displayProfileName = document.getElementById("display-profile-name")
 
 let userData;
 
@@ -27,6 +28,7 @@ onAuthStateChanged(auth, (user) => {
         userData = user
         initDb()
         console.log("logged in: ", user)
+        displayProfileName.innerHTML = userData.email.split("@")[0]
     }
     else {
         mainModule.style.display = "none"
@@ -108,33 +110,62 @@ logoutBtn.addEventListener("click", () => {
       });
 })
 
-//Group system
+//groups and messages
+
+let witchGroup;
 
 const initDb = () => {
     const db = getFirestore()
 
-    const groups = document.getElementById("groups")
-
-    const q = query(collection(db, "group"), orderBy("timestamp"))
+    const group = query(collection(db, "group"), orderBy("timestamp"))
     
-    onSnapshot(q, (snapshot) => {
+    //Creates new group on click of btn
+
+    onSnapshot(group, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
-            const data = change.doc.data()
-            const main = document.getElementById("main")
+            const group = change.doc.data()
             const div = document.createElement("div")
-            
-            div.style.backgroundColor = "random"
-            div.style.width = "50px"
-            div.style.height = "50px"
 
-            document.getElementById("public-groups").appendChild(div)
-    
-        })
+            div.style.backgroundColor = "rgb(55, 55, 55)"
+            div.style.width = "100px"
+            div.style.height = "100px"
+            div.style.borderRadius = "50%"
+            div.style.marginTop = "6px"
+            div.style.textTransform = "uppercase"
+            div.style.fontSize = "1.5rem"
+            div.style.display = "flex"
+            div.style.justifyContent = "center"
+            div.style.alignItems = "center"
+            
+            div.innerHTML = group.ServerName.charAt(0)
+
+            document.getElementById("public-groups").appendChild(div)       
+
+            //Adds new messages on btn click
+
+            div.addEventListener("click", () => {
+                const ul = document.querySelector('ul')
+                ul.innerHTML = ""
+                witchGroup = change.doc.id
+                const messages = query(collection(db, "group", witchGroup, "messages" ), orderBy("timestamp"))
+
+                onSnapshot(messages, (snapshot) => {
+                    snapshot.docChanges().forEach((change) => {
+                        const msg = change.doc.data()
+                        const li = document.createElement('li')
+                        li.innerHTML = msg.message
+                        ul.appendChild(li)
+                    })
+                })
+            })
+        });
     })
+
+    //Adds group's to database 
 
     const newGroup = async e => {
         e.preventDefault() 
-    
+
         try {
             await addDoc(collection(db, "group"), {
                 ServerName: userData.email.split("@")[0] + " server",
@@ -147,4 +178,24 @@ const initDb = () => {
     }
     
     document.getElementById("creategroup").addEventListener("submit", newGroup)
+
+    //Adds messages to database
+
+    const newMessage = async e => {
+        e.preventDefault() 
+
+        try {
+            await addDoc(collection(db, "group", witchGroup, "messages"),  {
+                userid: userData.uid,
+                userName: userData.email.split("@")[0],
+                timestamp: Timestamp.fromDate(new Date()),
+                message: document.getElementById("new-message").value
+            })
+
+            document.getElementById("new-message").value = ""
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    document.getElementById("send-new-message").addEventListener("click", newMessage)
 }
